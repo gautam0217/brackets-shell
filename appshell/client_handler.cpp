@@ -407,6 +407,7 @@ std::string ClientHandler::GetLastDownloadFile() {
 
 void ClientHandler::ShowDevTools(CefRefPtr<CefBrowser> browser,
                     const CefPoint& inspect_element_at) {
+    if (g_remote_debugging_port > 0) {
     CefWindowInfo wi;
     CefBrowserSettings settings;
 
@@ -414,7 +415,7 @@ void ClientHandler::ShowDevTools(CefRefPtr<CefBrowser> browser,
     wi.SetAsPopup(NULL, "DevTools");
 #endif
     browser->GetHost()->ShowDevTools(wi, browser->GetHost()->GetClient(), settings, CefPoint());
-
+    }
 }
 
 bool ClientHandler::SendJSCommand(CefRefPtr<CefBrowser> browser, const CefString& commandName, CefRefPtr<CommandCallback> callback)

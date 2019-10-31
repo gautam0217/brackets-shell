@@ -397,6 +397,7 @@ public:
             }
         } else if (message_name == "ShowDeveloperTools") {
             // Parameters - none
+            if (g_remote_debugging_port > 0) {
             CefWindowInfo wi;
             CefBrowserSettings settings;
 
@@ -409,7 +410,7 @@ public:
             #ifndef OS_LINUX
                 browser->GetHost()->ShowDevTools(wi, browser->GetHost()->GetClient(), settings, CefPoint());
             #endif
-
+            }
         } else if (message_name == "GetNodeState") {
             // Parameters:
             //  0: int32 - callback id

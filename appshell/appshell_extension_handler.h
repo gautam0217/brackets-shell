@@ -171,7 +171,7 @@ class AppShellExtensionHandler : public CefV8Handler {
         } else if (name == "GetUserDocumentsDirectory") {
             retval = CefV8Value::CreateString(AppGetDocumentsDirectory());
         } else if (name == "GetRemoteDebuggingPort") {
-            retval = CefV8Value::CreateInt(REMOTE_DEBUGGING_PORT);
+            retval = CefV8Value::CreateInt(g_remote_debugging_port);
         } else {
             // Pass all messages to the browser process. Look in appshell_extensions.cpp for implementation.
             CefRefPtr<CefBrowser> browser = CefV8Context::GetCurrentContext()->GetBrowser();

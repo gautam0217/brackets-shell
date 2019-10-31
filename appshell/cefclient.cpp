@@ -23,7 +23,7 @@ CefRefPtr<ClientHandler> g_handler;
 #ifdef OS_WIN
 bool g_force_enable_acc = false;
 #endif
-
+int g_remote_debugging_port = 0;
 CefRefPtr<CefBrowser> AppGetBrowser() {
   if (!g_handler.get())
     return NULL;
@@ -95,7 +95,14 @@ void AppGetSettings(CefSettings& settings, CefRefPtr<CefCommandLine> command_lin
       command_line->GetSwitchValue(client::switches::kJavascriptFlags);
     
   // Enable dev tools
-  settings.remote_debugging_port = REMOTE_DEBUGGING_PORT;
+  CefString debugger_port = command_line->GetSwitchValue("remote-debugging-port");
+  if (!debugger_port.empty()) {
+    int port = std::stoi(debugger_port.ToString());
+    if (port > 0){
+      g_remote_debugging_port = port;
+      settings.remote_debugging_port = port;
+    }
+  }
   
   std::wstring versionStr = appshell::AppGetProductVersionString();
     
