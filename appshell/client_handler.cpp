@@ -405,6 +405,7 @@ std::string ClientHandler::GetLastDownloadFile() {
   return m_LastDownloadFile;
 }
 
+int g_remote_debugging_port = 0;
 void ClientHandler::ShowDevTools(CefRefPtr<CefBrowser> browser,
                     const CefPoint& inspect_element_at) {
     if (g_remote_debugging_port > 0) {

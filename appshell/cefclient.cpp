@@ -23,7 +23,6 @@ CefRefPtr<ClientHandler> g_handler;
 #ifdef OS_WIN
 bool g_force_enable_acc = false;
 #endif
-int g_remote_debugging_port = 0;
 
 CefRefPtr<CefBrowser> AppGetBrowser() {
   if (!g_handler.get())
