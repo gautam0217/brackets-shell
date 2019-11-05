@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <sstream>
 #include <string>
+#include <limits>
 #include "include/cef_app.h"
 #include "include/cef_browser.h"
 #include "include/cef_command_line.h"
@@ -106,7 +107,9 @@ void AppGetSettings(CefSettings& settings, CefRefPtr<CefCommandLine> command_lin
     }
     else {
       LOG(ERROR) << "Could not enable remote deugging on port: "<< port
-                 << " but don't worry, Bracket\'s developer tools will continue working.";
+                 << " port number must be between 1024 and " << max_port_num
+                 << " (i.e. 1024 < remote-debugging-port < " << max_port_num
+                 << ") but don't worry, Bracket\'s developer tools will continue working.";
     }
   }
   
