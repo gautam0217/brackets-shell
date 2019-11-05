@@ -106,7 +106,7 @@ void AppGetSettings(CefSettings& settings, CefRefPtr<CefCommandLine> command_lin
       settings.remote_debugging_port = port;
     }
     else {
-      LOG(ERROR) << "Could not enable remote deugging on port: "<< port
+      LOG(ERROR) << "Could not enable remote debugging on port: "<< port
                  << " port number must be between 1024 and " << max_port_num
                  << " (i.e. 1024 < remote-debugging-port < " << max_port_num
                  << ") but don't worry, Brackets\' developer tools will continue working.";
