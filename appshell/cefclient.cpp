@@ -22,6 +22,7 @@ CefRefPtr<ClientHandler> g_handler;
 
 #ifdef OS_WIN
 bool g_force_enable_acc = false;
+#undef max
 #endif
 
 CefRefPtr<CefBrowser> AppGetBrowser() {
@@ -98,9 +99,14 @@ void AppGetSettings(CefSettings& settings, CefRefPtr<CefCommandLine> command_lin
   CefString debugger_port = command_line->GetSwitchValue("remote-debugging-port");
   if (!debugger_port.empty()) {
     int port = atoi(debugger_port.ToString().c_str());
-    if (port > 0){
+    static const int max_port_num = static_cast<int>(std::numeric_limits<uint16_t>::max());
+    if (port > 1024 && port < max_port_num) {
       g_remote_debugging_port = port;
       settings.remote_debugging_port = port;
+    }
+    else {
+      LOG(ERROR) << "Could not enable remote deugging on port: "<< port
+                 << " but don't worry, Bracket\'s developer tools will continue working.";
     }
   }
   
