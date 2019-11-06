@@ -20,6 +20,7 @@
 #include "config.h"
 
 CefRefPtr<ClientHandler> g_handler;
+int g_remote_debugging_port = 0;
 
 #ifdef OS_WIN
 bool g_force_enable_acc = false;
