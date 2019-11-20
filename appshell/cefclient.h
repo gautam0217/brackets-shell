@@ -26,6 +26,8 @@ std::string AppGetWorkingDirectory();
 // Returns the starting URL
 CefString AppGetInitialURL();
 
+int AppInterceptArgv(char * argumentVector[], int argumentCount);
+
 // Returns the application settings based on command line arguments.
 void AppGetSettings(CefSettings& settings, CefRefPtr<CefCommandLine> command_line);
 

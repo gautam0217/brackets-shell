@@ -803,7 +803,8 @@ int main(int argc, char* argv[]) {
   g_autopool = [[NSAutoreleasePool alloc] init];
 
   pendingOpenFiles = [[NSMutableArray alloc] init];
-  
+
+  argc = AppInterceptArgv(argv, argc);
   CefMainArgs main_args(argc, argv);
  
   // Delete Special Characters Palette from Edit menu.

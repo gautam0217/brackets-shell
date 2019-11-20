@@ -53,6 +53,46 @@ bool HasSwitch(CefRefPtr<CefCommandLine> command_line , CefString& switch_name)
   }
 }
 
+
+int AppInterceptArgv(char * argumentVector[], int argumentCount)
+{
+  int idx = 0;
+  static const char * remote_debugging_flag = "--remote-debugging-port";
+  for (;idx < argumentCount; ++idx){
+    puts(argumentVector[idx]);
+    if (char * brk = strstr(argumentVector[idx], remote_debugging_flag)){
+        // Enable dev tools
+        char * end_of_flag = argumentVector[idx] + strlen(remote_debugging_flag);
+        long port = 0;
+        if (*end_of_flag == '=') {
+          ++end_of_flag;
+          port = strtol(end_of_flag, NULL, 10);
+          printf("%d\n",port);
+          if (errno == ERANGE) {
+            port = errno = 0;
+          }
+        }
+        const long max_allowed_debug_port_num = 65534;
+        const long min_allowed_debug_port_num = 1024;
+        if (port >= min_allowed_debug_port_num && port <= max_allowed_debug_port_num) {
+          g_remote_debugging_port = static_cast<int>(port);
+        }
+        else {
+          g_remote_debugging_port_invalid = end_of_flag;
+          memset(argumentVector[idx], 0, strlen(argumentVector[idx]));
+        }
+        break;
+      }
+  }
+  for (++idx ;idx < argumentCount; ++idx){
+    puts(argumentVector[idx]);
+    if (char * brk = strstr(argumentVector[idx], remote_debugging_flag)){
+      memset(argumentVector[idx], 0, strlen(argumentVector[idx]));
+    }
+  }
+  return argumentCount;
+}
+
 // Returns the application settings based on command line arguments.
 void AppGetSettings(CefSettings& settings, CefRefPtr<CefCommandLine> command_line) {
   DCHECK(command_line.get());
@@ -96,31 +136,6 @@ void AppGetSettings(CefSettings& settings, CefRefPtr<CefCommandLine> command_lin
 
   CefString(&settings.javascript_flags) =
       command_line->GetSwitchValue(client::switches::kJavascriptFlags);
-    
-  // Enable dev tools
-  CefString debugger_port = command_line->GetSwitchValue("remote-debugging-port");
-  if (!debugger_port.empty()) {
-    g_remote_debugging_port_invalid = debugger_port.ToString();
-    const long port = strtol(g_remote_debugging_port_invalid.c_str(), NULL, 10);
-    if (errno == ERANGE || port == 0) {
-        errno = 0;
-    }
-    else {
-        const long max_allowed_debug_port_num = 65534;
-#ifdef OS_WIN
-           // As of CEF-2623 Windows allows all positive port numbers less than 65534
-           // Please validate this before migrating to new CEF version
-           const long min_allowed_debug_port_num = 1;
-#else
-           const long min_allowed_debug_port_num = 1024;
-#endif
-        if (port >= min_allowed_debug_port_num && port <= max_allowed_debug_port_num) {
-          g_remote_debugging_port = static_cast<int>(port);
-          settings.remote_debugging_port = g_remote_debugging_port;
-          g_remote_debugging_port_invalid.clear();
-        }
-    }
-  }
   
   std::wstring versionStr = appshell::AppGetProductVersionString();
     
